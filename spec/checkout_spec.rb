@@ -52,6 +52,13 @@ describe('Checkout') do
     end
   end
 
+  describe ".find_by_book" do
+    it "finds checkouts by book" do
+      checkout.save
+      expect(Checkout.find_by_book(1)).to eq [checkout]
+    end
+  end
+
   describe ".overdue" do
     it "returns a list of all overdue checkouts" do
       checkout.save

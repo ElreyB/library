@@ -64,4 +64,23 @@ describe('Book') do
       expect(Book.all).to eq []
     end
   end
+
+  describe '#checkout' do
+    it "creates a checkout record for a book and patron, and marks it as checked out" do
+      book.save
+      checkout_record = book.checkout(1)
+      expect(Checkout.all).to eq [checkout_record]
+      expect(book.checked_in).to eq false
+    end
+  end
+
+  describe '#checkin' do
+    # it "sets a book to checked in, and updates checkout record" do
+    #   book.save
+    #   checkout_record = book.checkout(1)
+    #   book.checkin
+    #   expect(checkout_record.checked_in).to eq true
+    #   expect(book.checked_in).to eq true
+    # end
+  end
 end

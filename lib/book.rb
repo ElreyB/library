@@ -25,6 +25,27 @@ class Book
     end
   end
 
+  def checkout(patron_id)
+    checkout_record = Checkout.new({
+      book_id: @id,
+      patron_id: patron_id,
+      checkout_date: Date.today.to_s
+    })
+    checkout_record.save
+    @checked_in = false
+    checkout_record
+  end
+
+  def checkin 
+
+    @checked_in = true
+  end
+
+  def delete
+    DB.exec("DELETE FROM books WHERE id = #{@id};")
+    DB.exec("DELETE FROM checkouts WHERE book_id = #{@id};")
+  end
+
   def self.all
     results = DB.exec("SELECT * FROM books;")
     results.map do |result|
@@ -54,11 +75,6 @@ class Book
         checked_in: ((result["checked_in"] == "t") ? true : false)
         })
     end
-  end
-
-  def delete
-    DB.exec("DELETE FROM books WHERE id = #{@id};")
-    DB.exec("DELETE FROM checkouts WHERE book_id = #{@id};")
   end
 
   def ==(other_book)
