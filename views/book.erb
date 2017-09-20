@@ -1,25 +1,48 @@
 <h1>Book Record</h1>
 
-<form action="/admin/books/<%= @book.id %>" method="post">
-  <input type="hidden" name="_method" value="delete">
-  <button type="submit" class="btn">Delete</button>
-</form>
+<% if @user == "admin" %>
+  <form action="/admin/books/<%= @book.id %>" method="post">
+    <input type="hidden" name="_method" value="delete">
+    <button type="submit" class="btn">Delete</button>
+  </form>
+<% end %>
 
 <p><strong>Title:</strong> <em><%= @book.title %></em></p>
 <p><strong>Author</strong> <%= @book.author_name %></p>
 <p><strong>
   <%= @book.checked_in ? "Checked In" : "Checked Out" %>
 </strong></p>
-<p><strong>Checkout Log:</strong></p>
-<% if @book.get_checkouts.any? %>
-  <ul>
-    <% @book.get_checkouts.each do |record| %>
-      <% patron = Patron.find(record.patron_id).first %>
-      <li>
-        <strong><%= patron.full_name %></strong> on <%= record.checkout_date %>
-      </li>
-    <% end %>
-  </ul>
-<% end %>
 
-<p><a href="/admin/books">Back to books list</a></p>
+<% if @user == "admin" %>
+  <p><strong>Checkout Log:</strong></p>
+  <% if @book.get_checkouts.any? %>
+    <ul>
+      <% @book.get_checkouts.each do |record| %>
+        <% patron = Patron.find(record.patron_id).first %>
+        <li>
+          <strong><%= patron.full_name %></strong> on <%= record.checkout_date %>
+        </li>
+      <% end %>
+    </ul>
+  <% end %>
+<% else %>
+  <% if @book.checked_in %>
+    <form action="/<%= @user %>/<%= @book.id %>/checkout" method="post">
+      <input type="hidden" name="_method" value="patch">
+      <button type="submit" class="btn">Check Out</button>
+    </form>
+  <% else %>
+    <form action="/<%= @user %>/<%= @book.id %>/checkin" method="post">
+      <input type="hidden" name="_method" value="patch">
+      <button type="submit" class="btn">Check In</button>
+    </form>
+  <% end %>
+<% end %>
+<p><a href="/<%= @user %>/books">Back to books list</a></p>
+
+<% if @user == "admin" %>
+  <a href="/admin"><button type="button" class="btn">Admin Portal</button></a>
+<% else %>
+  <a href="/patron/patrons/<%= @user %>"><button type="button" class="btn">User Home</button></a>
+<% end %>
+<a href="/"><button type="button" class="btn">Home</button></a>

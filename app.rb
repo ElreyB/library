@@ -17,14 +17,19 @@ get('/admin') do
   erb(:admin)
 end
 
-get('/admin/books') do
+get('/:user/books') do
+  @user = params[:user]
   @books = Book.all
-  erb(:admin_books)
+  erb(:books_list)
 end
 
 get('/admin/patrons') do
   @patrons = Patron.all
   erb(:admin_patrons)
+end
+
+get('/patron') do
+  erb(:patron_portal)
 end
 
 get('/patron/add') do
@@ -44,6 +49,11 @@ post('/patron/add') do
   redirect "/admin/patrons"
 end
 
+post('/patron') do
+  @patron = Patron.find(params['patron-id'].to_i).first
+  redirect "/patron/patrons/#{@patron.id}"
+end
+
 post('/book/add') do
   book = Book.new({
     title: params["title"],
@@ -54,16 +64,34 @@ post('/book/add') do
   redirect "/admin/books"
 end
 
-get('/admin/patrons/:id') do
+get('/:user/patrons/:id') do
   id = params[:id].to_i
+  @user = params[:user]
   @patron = Patron.find(id).first
   erb(:patron)
 end
 
-get('/admin/books/:id') do
+get('/:user/books/:id') do
   id = params[:id].to_i
+  @user = params[:user]
   @book = Book.find(id).first
   erb(:book)
+end
+
+patch('/:patron_id/:book_id/checkout') do
+  patron_id = params[:patron_id].to_i
+  book_id = params[:book_id].to_i
+  book = Book.find(book_id).first
+  book.checkout(patron_id)
+  redirect "#{patron_id}/books/#{book_id}"
+end
+
+patch('/:patron_id/:book_id/checkin') do
+  patron_id = params[:patron_id].to_i
+  book_id = params[:book_id].to_i
+  book = Book.find(book_id).first
+  book.checkin
+  redirect "#{patron_id}/books/#{book_id}"
 end
 
 get('/admin/patrons/:id/edit') do

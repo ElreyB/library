@@ -33,6 +33,7 @@ class Book
     })
     checkout_record.save
     @checked_in = false
+    save
     checkout_record
   end
 
@@ -43,6 +44,7 @@ class Book
       record.save
     end
     @checked_in = true
+    save
   end
 
   def get_checkouts
