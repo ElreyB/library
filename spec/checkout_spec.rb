@@ -59,6 +59,13 @@ describe('Checkout') do
     end
   end
 
+  describe ".find_by_patron" do
+    it "finds checkouts by patron" do
+      checkout.save
+      expect(Checkout.find_by_patron(2)).to eq [checkout]
+    end
+  end
+
   describe ".overdue" do
     it "returns a list of all overdue checkouts" do
       checkout.save

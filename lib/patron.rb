@@ -43,6 +43,10 @@ class Patron
     DB.exec("DELETE FROM checkouts WHERE patron_id = #{@id};")
   end
 
+  def get_checkouts
+    Checkout.find_by_patron(@id)
+  end
+  
   def self.find(search_term)
     results = []
     if search_term.class == Integer

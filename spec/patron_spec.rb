@@ -44,6 +44,19 @@ describe('Patron') do
     end
   end
 
+  describe '#get_checkouts' do
+    it "returns all checkout associated" do
+      patron.save
+      book2 = Book.new({:title => "Sorcerers Stone", :author_first => "J. K.", :author_last => "Rowling"})
+      book3 = Book.new({:title => "Harry Potter", :author_first => "J. K.", :author_last => "Rowling"})
+      book2.save
+      book3.save
+      record2 = book2.checkout(patron.id)
+      record3 = book3.checkout(patron.id)
+      expect(patron.get_checkouts).to eq [record2, record3]
+    end
+  end
+
   describe('.find') do
     it "returns all patrons whose first or last name or id matches the search term" do
       patron.save

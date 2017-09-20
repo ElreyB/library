@@ -65,6 +65,20 @@ describe('Book') do
     end
   end
 
+  describe '#get_checkouts' do
+    it "returns all checkout associated" do
+      patron = Patron.new({:first_name => "Bob", :last_name => "Smith"})
+      patron.save
+      book2 = Book.new({:title => "Sorcerers Stone", :author_first => "J. K.", :author_last => "Rowling"})
+      book2.save
+      record2 = book2.checkout(patron.id)
+      book2.checkin
+      record2.checked_in = true
+      record3 = book2.checkout(patron.id)
+      expect(patron.get_checkouts).to eq [record2, record3]
+    end
+  end
+
   describe '#checkout' do
     it "creates a checkout record for a book and patron, and marks it as checked out" do
       book.save
@@ -75,12 +89,12 @@ describe('Book') do
   end
 
   describe '#checkin' do
-    # it "sets a book to checked in, and updates checkout record" do
-    #   book.save
-    #   checkout_record = book.checkout(1)
-    #   book.checkin
-    #   expect(checkout_record.checked_in).to eq true
-    #   expect(book.checked_in).to eq true
-    # end
+    it "sets a book to checked in, and updates checkout record" do
+      book.save
+      checkout_record = book.checkout(1)
+      book.checkin
+      expect(Checkout.find_by_book(book.id).first.checked_in).to eq true
+      expect(book.checked_in).to eq true
+    end
   end
 end

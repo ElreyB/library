@@ -36,9 +36,17 @@ class Book
     checkout_record
   end
 
-  def checkin 
-
+  def checkin
+    checkout_records = Checkout.find_by_book(@id)
+    checkout_records.each do |record|
+      record.checked_in = true
+      record.save
+    end
     @checked_in = true
+  end
+
+  def get_checkouts
+    Checkout.find_by_book(@id)
   end
 
   def delete

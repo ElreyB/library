@@ -62,6 +62,20 @@ class Checkout
     end
   end
 
+  def self.find_by_patron(patron_id)
+    results = DB.exec("SELECT * FROM checkouts WHERE patron_id = #{patron_id};")
+    results.map do |result|
+      Checkout.new({
+        id: result["id"].to_i,
+        book_id: result["book_id"].to_i,
+        patron_id: result["patron_id"].to_i,
+        checkout_date: result["checkout_date"],
+        due_date: result["due_date"],
+        checked_in: ((result["checked_in"] == "t") ? true : false)
+      })
+    end
+  end
+
   def self.overdue
     today = Date.today.to_s
     results = DB.exec("SELECT * FROM checkouts WHERE due_date <= '#{today}';")
