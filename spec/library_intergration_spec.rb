@@ -65,3 +65,16 @@ describe('Librarian Portal', {:type => :feature}) do
     expect(page).to have_no_content("Harry Potter")
   end
 end
+
+describe('Patron Portal', {:type =>:feature}) do
+  it 'allows patron to checkout a book and check a book in' do
+    visit('/patron')
+    click_button('Sign In')
+    click_link('Catalog')
+    click_link('Harry Potter')
+    click_button('Check Out')
+    expect(page).to have_content("Checked Out")
+    click_button('Check In')
+    expect(page).to have_content("Checked In")
+  end
+end

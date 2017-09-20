@@ -29,6 +29,11 @@ get('/admin/patrons') do
 end
 
 get('/patron') do
+  patron2 = Patron.new({:first_name => "Bob", :last_name => "Smith"})
+  patron2.save
+  book2 = Book.new({:title => "Harry Potter", :author_first => "J. K.", :author_last => "Rowling"})
+  book2.save
+  @id = patron2.id
   erb(:patron_portal)
 end
 
