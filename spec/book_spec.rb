@@ -6,11 +6,12 @@ describe('Book') do
   let(:book) { Book.new({:title => "Harry Potter", :author_first => "J. K.", :author_last => "Rowling"})}
 
   describe '#initialize' do
-    it 'has a readable title, first name and last name' do
+    it 'has a readable title, first name and last name, and is created checked in' do
       expect(book.title).to eq "Harry Potter"
       expect(book.author_last).to eq "Rowling"
       expect(book.author_first).to eq "J. K."
       expect(book.id).to eq nil
+      expect(book.checked_in).to eq true
     end
   end
 

@@ -1,13 +1,14 @@
 #!/usr/bin/env ruby
 
 class Book
-  attr_reader :id, :title, :author_first, :author_last
+  attr_reader :id, :title, :author_first, :author_last, :checked_in
 
   def initialize(args)
     @id = args[:id] || nil
     @title = args[:title]
     @author_first = args[:author_first]
     @author_last = args[:author_last]
+    @checked_in = args[:checked_in] || true
   end
 
   def author_name
@@ -15,7 +16,7 @@ class Book
   end
 
   def save
-    results = DB.exec("INSERT INTO books (title, author_first, author_last) VALUES ('#{@title}', '#{@author_first}', '#{@author_last}') RETURNING id;")
+    results = DB.exec("INSERT INTO books (title, author_first, author_last, checked_in) VALUES ('#{@title}', '#{@author_first}', '#{@author_last}', #{@checked_in}) RETURNING id;")
     @id = results.first['id'].to_i
   end
 
@@ -26,7 +27,8 @@ class Book
         title: result['title'],
         author_first: result['author_first'],
         author_last: result['author_last'],
-        id: result['id'].to_i
+        id: result['id'].to_i,
+        checked_in: ((result["checked_in"] == "true") ? true : false)
         })
     end
   end
@@ -43,7 +45,8 @@ class Book
         title: result['title'],
         author_first: result['author_first'],
         author_last: result['author_last'],
-        id: result['id'].to_i
+        id: result['id'].to_i,
+        checked_in: ((result["checked_in"] == "true") ? true : false)
         })
     end
   end
@@ -52,5 +55,6 @@ class Book
     (@id == other_book.id ) &
     (@title == other_book.title) &
     (author_name == other_book.author_name)
+    (@checked_in == other_book.checked_in)
   end
 end
