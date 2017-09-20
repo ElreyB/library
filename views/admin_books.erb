@@ -1,0 +1,15 @@
+<h1>Books</h1>
+
+<p><a href="/book/add">Add a Book</a></p>
+
+<% if @books.any? %>
+  <ul>
+    <% @books.each do |book| %>
+      <li><%= book.title %></li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>There are currently no books.</p>
+<% end %>
+
+<a href="/"><button type="button" class="btn">Home</button></a>

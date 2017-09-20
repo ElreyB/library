@@ -1,0 +1,15 @@
+<h1>Patrons</h1>
+
+<p><a href="/patron/add">Add a Patron</a></p>
+
+<% if @patrons.any? %>
+  <ul>
+    <% @patrons.each do |patron| %>
+      <li><%= patron.full_name %></li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>There are currently no patrons.</p>
+<% end %>
+
+<a href="/"><button type="button" class="btn">Home</button></a>
