@@ -1,6 +1,9 @@
 <h1>Book Record</h1>
 
-<a href="/books/<%= @book.id %>/edit"><button type="button" class="btn">Edit</button></a>
+<form action="/admin/books/<%= @book.id %>" method="post">
+  <input type="hidden" name="_method" value="delete">
+  <button type="submit" class="btn">Delete</button>
+</form>
 
 <p><strong>Title:</strong> <em><%= @book.title %></em></p>
 <p><strong>Author</strong> <%= @book.author_name %></p>

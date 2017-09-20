@@ -65,3 +65,32 @@ get('/admin/books/:id') do
   @book = Book.find(id).first
   erb(:book)
 end
+
+get('/admin/patrons/:id/edit') do
+  id = params[:id].to_i
+  @patron = Patron.find(id).first
+  erb(:edit_patron)
+end
+
+patch('/patrons/:id') do
+  id = params[:id].to_i
+  patron = Patron.find(id).first
+  patron.first_name = params['first-name']
+  patron.last_name = params['last-name']
+  patron.save
+  redirect "/admin/patrons/#{patron.id}"
+end
+
+delete('/admin/patrons/:id') do
+  id = params[:id].to_i
+  patron = Patron.find(id).first
+  patron.delete
+  redirect "/admin/patrons"
+end
+
+delete('/admin/books/:id') do
+  id = params[:id].to_i
+  book = Book.find(id).first
+  book.delete
+  redirect "/admin/books"
+end

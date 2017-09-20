@@ -24,4 +24,44 @@ describe('Librarian Portal', {:type => :feature}) do
     click_button('Add Patron')
     expect(page).to have_content("Bob Smith")
   end
+
+  it 'allow admin to edit a patron' do
+    visit('/admin')
+    click_link('Patrons')
+    click_link('Add a Patron')
+    fill_in('first-name', :with => "James")
+    fill_in('last-name', :with => "Jameson")
+    click_button('Add Patron')
+    click_link('James Jameson')
+    click_link('Edit')
+    fill_in('first-name', :with => "James")
+    fill_in('last-name', :with => "Jenkins")
+    click_button('Edit Patron')
+    expect(page).to have_content("James Jenkins")
+  end
+
+  it 'allow admin to edit a patron' do
+    visit('/admin')
+    click_link('Patrons')
+    click_link('Add a Patron')
+    fill_in('first-name', :with => "James")
+    fill_in('last-name', :with => "Jameson")
+    click_button('Add Patron')
+    click_link('James Jameson')
+    click_button('Delete')
+    expect(page).to have_no_content("James Jameson")
+  end
+
+  it 'allows admin to delete a book' do
+    visit('/admin')
+    click_link('Books')
+    click_link('Add a Book')
+    fill_in('title', :with => "Harry Potter")
+    fill_in('author-first', :with => "J. K.")
+    fill_in('author-last', :with => "Rowling")
+    click_button('Add Book')
+    click_link('Harry Potter')
+    click_button('Delete')
+    expect(page).to have_no_content("Harry Potter")
+  end
 end

@@ -1,6 +1,10 @@
-<h1>Patron Information</h1>
+<h1>Patron Record</h1>
 
-<a href="/patrons/<%= @patron.id %>/edit"><button type="button" class="btn">Edit</button></a>
+<a href="/admin/patrons/<%= @patron.id %>/edit"><button type="button" class="btn">Edit</button></a>
+<form action="/admin/patrons/<%= @patron.id %>" method="post">
+  <input type="hidden" name="_method" value="delete">
+  <button type="submit" class="btn">Delete</button>
+</form>
 
 <p><strong>Name:</strong> <%= @patron.full_name %></p>
 <p><strong>Checkouts:</strong></p>
