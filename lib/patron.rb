@@ -34,7 +34,12 @@ class Patron
   end
 
   def self.find(search_term)
-    results = DB.exec("SELECT * FROM patrons WHERE first_name = '#{search_term}' OR last_name = '#{search_term}' OR id = #{search_term};")
+    results = []
+    if search_term.class == Integer
+      results = DB.exec("SELECT * FROM patrons WHERE id = #{search_term};")
+    else
+      results = DB.exec("SELECT * FROM patrons WHERE first_name = '#{search_term}' OR last_name = '#{search_term}';")
+    end
     results.map do |result|
       Patron.new({
         :first_name => result["first_name"],
