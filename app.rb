@@ -59,3 +59,9 @@ get('/admin/patrons/:id') do
   @patron = Patron.find(id).first
   erb(:patron)
 end
+
+get('/admin/books/:id') do
+  id = params[:id].to_i
+  @book = Book.find(id).first
+  erb(:book)
+end

@@ -5,7 +5,9 @@
 <% if @books.any? %>
   <ul>
     <% @books.each do |book| %>
-      <li><%= book.title %></li>
+      <li>
+        <a href="/admin/books/<%= book.id %>"><%= book.title %></a>
+      </li>
     <% end %>
   </ul>
 <% else %>

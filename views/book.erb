@@ -1,0 +1,22 @@
+<h1>Book Record</h1>
+
+<a href="/books/<%= @book.id %>/edit"><button type="button" class="btn">Edit</button></a>
+
+<p><strong>Title:</strong> <em><%= @book.title %></em></p>
+<p><strong>Author</strong> <%= @book.author_name %></p>
+<p><strong>
+  <%= @book.checked_in ? "Checked In" : "Checked Out" %>
+</strong></p>
+<p><strong>Checkout Log:</strong></p>
+<% if @book.get_checkouts.any? %>
+  <ul>
+    <% @book.get_checkouts.each do |record| %>
+      <% patron = Patron.find(record.patron_id).first %>
+      <li>
+        <strong><%= patron.full_name %></strong> on <%= record.checkout_date %>
+      </li>
+    <% end %>
+  </ul>
+<% end %>
+
+<p><a href="/admin/books">Back to books list</a></p>
