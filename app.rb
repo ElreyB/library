@@ -53,3 +53,9 @@ post('/book/add') do
   book.save
   redirect "/admin/books"
 end
+
+get('/admin/patrons/:id') do
+  id = params[:id].to_i
+  @patron = Patron.find(id).first
+  erb(:patron)
+end

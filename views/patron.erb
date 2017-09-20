@@ -1,0 +1,20 @@
+<h1>Patron Information</h1>
+
+<a href="/patron/<%= @patron.id %>/edit"><button type="button" class="btn">Edit</button></a>
+
+<p><strong>Name:</strong> <%= @patron.full_name %></p>
+<p><strong>Checkouts:</strong></p>
+<% if @patron.get_checkouts.any? %>
+  <ul>
+    <% @patron.get_checkouts.each do |checkout| %>
+      <% book = Book.find(checkout.book_id) %>
+      <li>
+        <em><%= book.title %></em> Due: <%= checkout.due_date %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No books saved to patron.</p>
+<% end %>
+
+<p><a href="/admin/patrons">Back to patrons list</a></p>

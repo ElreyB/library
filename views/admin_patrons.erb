@@ -5,7 +5,9 @@
 <% if @patrons.any? %>
   <ul>
     <% @patrons.each do |patron| %>
-      <li><%= patron.full_name %></li>
+      <li>
+        <a href="/admin/patrons/<%= patron.id %>"><%= patron.full_name %></a>
+      </li>
     <% end %>
   </ul>
 <% else %>
