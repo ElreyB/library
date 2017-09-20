@@ -1,7 +1,8 @@
 #!/usr/bin/env ruby
 
 class Patron
-  attr_reader :id, :first_name, :last_name
+  attr_reader :id
+  attr_accessor :first_name, :last_name
 
   def initialize(attributes)
     @first_name = attributes[:first_name]
@@ -14,8 +15,12 @@ class Patron
   end
 
   def save
-    results = DB.exec("INSERT INTO patrons (first_name, last_name) VALUES ('#{@first_name}', '#{@last_name}') RETURNING id;")
-    @id = results.first["id"].to_i
+    if @id
+      DB.exec("UPDATE patrons SET first_name = '#{@first_name}', last_name = '#{@last_name}' WHERE id = #{@id};")
+    else
+      results = DB.exec("INSERT INTO patrons (first_name, last_name) VALUES ('#{@first_name}', '#{@last_name}') RETURNING id;")
+      @id = results.first["id"].to_i
+    end
   end
 
   def ==(other_patron)
@@ -31,6 +36,11 @@ class Patron
         :id => result["id"].to_i
       })
     end
+  end
+
+  def delete
+    DB.exec("DELETE FROM patrons WHERE id = #{@id};")
+    DB.exec("DELETE FROM checkouts WHERE patron_id = #{@id};")
   end
 
   def self.find(search_term)

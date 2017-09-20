@@ -34,6 +34,13 @@ describe('Checkout') do
       checkout.save
       expect(Checkout.all).to eq [checkout]
     end
+
+    it 'updates a saved checkout' do
+      checkout.save
+      checkout.checked_in = true
+      checkout.save
+      expect(Checkout.all).to eq [checkout]
+    end
   end
 
   describe ".find" do
@@ -51,6 +58,14 @@ describe('Checkout') do
       overdue_checkout = Checkout.new({book_id: 1, patron_id: 2, checkout_date: "2017-07-20"})
       overdue_checkout.save
       expect(Checkout.overdue).to eq [overdue_checkout]
+    end
+  end
+
+  describe '#delete' do
+    it 'will delete checkout from database' do
+      checkout.save
+      checkout.delete
+      expect(Checkout.all).to eq []
     end
   end
 end

@@ -1,14 +1,15 @@
 #!/usr/bin/env ruby
 
 class Book
-  attr_reader :id, :title, :author_first, :author_last, :checked_in
+  attr_reader :id, :title, :author_first, :author_last
+  attr_accessor :checked_in
 
   def initialize(args)
     @id = args[:id] || nil
     @title = args[:title]
     @author_first = args[:author_first]
     @author_last = args[:author_last]
-    @checked_in = args[:checked_in] || true
+    @checked_in = (args.has_key?(:checked_in) ? args[:checked_in] : true)
   end
 
   def author_name
@@ -16,8 +17,12 @@ class Book
   end
 
   def save
-    results = DB.exec("INSERT INTO books (title, author_first, author_last, checked_in) VALUES ('#{@title}', '#{@author_first}', '#{@author_last}', #{@checked_in}) RETURNING id;")
-    @id = results.first['id'].to_i
+    if @id
+      DB.exec("UPDATE books SET checked_in = #{@checked_in} WHERE id = #{@id};")
+    else
+      results = DB.exec("INSERT INTO books (title, author_first, author_last, checked_in) VALUES ('#{@title}', '#{@author_first}', '#{@author_last}', #{@checked_in}) RETURNING id;")
+      @id = results.first['id'].to_i
+    end
   end
 
   def self.all
@@ -28,7 +33,7 @@ class Book
         author_first: result['author_first'],
         author_last: result['author_last'],
         id: result['id'].to_i,
-        checked_in: ((result["checked_in"] == "true") ? true : false)
+        checked_in: ((result["checked_in"] == "t") ? true : false)
         })
     end
   end
@@ -46,9 +51,14 @@ class Book
         author_first: result['author_first'],
         author_last: result['author_last'],
         id: result['id'].to_i,
-        checked_in: ((result["checked_in"] == "true") ? true : false)
+        checked_in: ((result["checked_in"] == "t") ? true : false)
         })
     end
+  end
+
+  def delete
+    DB.exec("DELETE FROM books WHERE id = #{@id};")
+    DB.exec("DELETE FROM checkouts WHERE book_id = #{@id};")
   end
 
   def ==(other_book)

@@ -39,6 +39,13 @@ describe('Book') do
       book.save
       expect(Book.all).to eq [book]
     end
+
+    it "updates a saved book's information in the database" do
+      book.save
+      book.checked_in = false
+      book.save
+      expect(Book.all).to eq [book]
+    end
   end
 
   describe '.find' do
@@ -46,7 +53,15 @@ describe('Book') do
       book2 = Book.new({:title => "Sorcerers Stone", :author_first => "J. K.", :author_last => "Rowling"})
       book.save
       book2.save
-      expect(Book.find("Sorcerers Stone"))
+      expect(Book.find("Sorcerers Stone")).to eq [book2]
+    end
+  end
+
+  describe '#delete' do
+    it 'will delete book from database' do
+      book.save
+      book.delete
+      expect(Book.all).to eq []
     end
   end
 end

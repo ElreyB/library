@@ -29,6 +29,13 @@ describe('Patron') do
       patron.save
       expect(Patron.all).to eq([patron])
     end
+
+    it "updates a saved patron in the database" do
+      patron.save
+      patron.last_name = "Jones"
+      patron.save
+      expect(Patron.all).to eq [patron]
+    end
   end
 
   describe('.all') do
@@ -43,6 +50,14 @@ describe('Patron') do
       patron2 = Patron.new({:first_name => "Bob", :last_name => "Smith"})
       patron2.save
       expect(Patron.find(patron.id)).to eq([patron])
+    end
+  end
+
+  describe '#delete' do
+    it 'will delete patron from database' do
+      patron.save
+      patron.delete
+      expect(Patron.all).to eq []
     end
   end
 end
